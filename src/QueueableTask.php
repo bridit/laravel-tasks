@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class QueueableTask extends Task implements ShouldQueue
+class QueueableTask implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,8 +28,9 @@ class QueueableTask extends Task implements ShouldQueue
 
   public function handle()
   {
-    $this->execute(...$this->taskParams);
+    if (method_exists($this, 'execute')) {
+      $this->execute(...$this->taskParams);
+    }
   }
 
-  public function execute() {}
 }
